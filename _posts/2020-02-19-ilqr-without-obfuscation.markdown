@@ -311,9 +311,10 @@ state. Now we discuss how this is implemented in iLQR -- this is the
 
 Recall that `ForwardRollout` takes as input a trajectory of states, a trajectory
 of controls, and a target state. The trajectory of states corresponds to the
-previous rollout that was done (we'll talk about how to initialize the first
-rollout later, and the trajectory of controls corresponds to the controls used
-in the previous trajectory. Now, `ForwardRollout` works as follows:
+previous rollout that was done (we'll talk about [how to initialize the first
+rollout later](#the-initial-trajectory), and the trajectory of controls
+corresponds to the controls used in the previous trajectory. Now,
+`ForwardRollout` works as follows:
 
 * Let $$\bar{x}_t$$ denote the previous state trajectory, $$\bar{u}_t$$ the
 previous control trajectory
@@ -335,7 +336,11 @@ the iLQR algorithm works. We simply alternate between computing the gains to
 improve the controls and improving the controls to generate new trajectories,
 until the controls stop changing (this sounds suspiciously similar to Value
 Iteration, but there are some key differences). I think it's finally time to see
-a demo.
+a demo. I implemented an iLQR algorithm to swing up an inverted pendulum on a
+cart. The system has a four-dimensional state space consisting of position,
+velocity, pole angle, and angular velocity, and the control signal is a scalar
+force applied to the cart. The swingup task is nonlinear, so linear algorithms
+tend to struggle with this task.
 
 <div class="center-image">
   <video autoplay="autoplay" loop="loop" width="400px" height="auto"
@@ -343,3 +348,39 @@ a demo.
     <source src="/assets/img/ilqrswingup.webm" type="video/webm">
   </video>
 </div>
+
+Calm down, Boston Dynamics. I gotta finish grad school before I can help you
+make Spot as good as this.
+
+# Implementation Details and Tricks
+
+While the optimization part of iLQR is derived above, some implementation
+details were omitted. Moreover, in implementing this algorithm, I found that
+some "tricks" were either essential or very helpful to yield successful
+controllers. Read on to learn more about this.
+
+## The Initial Trajectory
+
+Before iLQR even begins, we must have some initial trajectory of states and
+controls. It is natural to wonder how one concocts such an initial trajectory.
+Unfortunately, in the general case, there is no single "right way" to do this,
+unless somehow you know of a trajectory that is somewhat close to optimal.
+Otherwise, to the best of my knowledge, we can use some heuristics to generate a
+trajectory of controls and initialize the state trajectory according to the
+dynamics following those controls. Here's some ideas for generating the control
+trajectory that I played with:
+
+* $$u_t = 0$$: This one was suggested by Li and Todorov (the inventors of iLQR).
+Intuitively, this might make training a little slow if the starting state is in
+a stable equilibrium.
+* $$u_t = \alpha\sin(\omega t), \alpha,\omega\in\mathbf{R}$$: This is likely to
+make more sense for scalar controls, but it ensures that a nice range of
+controls will be attempted in the initial trajectory. I found this worked
+slightly better than the "zero initialization" for the swingup.
+* $$u_t\sim\mathcal{N}(0, \Sigma), \Sigma=\Sigma^\top\in\mathbf{R}^{n_u\times
+  n_u}_{\geq 0}\succ 0$$: Zero-centered random controls. This one was the best during my
+  experiments.
+
+Since iLQR is an iterative nonlinear optimization algorithm, initialization can
+definitely have an affect on the final controller. Playing with various
+initialization schemas would be wise.
