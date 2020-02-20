@@ -1,0 +1,10 @@
+.center-image {
+  margin: 0 auto;
+  display: block;
+}
+
+.me-image {
+  border: 4px solid #444477;
+  max-width: 400px;
+  height: auto;
+}
