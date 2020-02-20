@@ -384,3 +384,50 @@ slightly better than the "zero initialization" for the swingup.
 Since iLQR is an iterative nonlinear optimization algorithm, initialization can
 definitely have an affect on the final controller. Playing with various
 initialization schemas would be wise.
+
+## Computing Jacobians the Lazy Way
+
+In the derivation of the iLQR optimization math, we needed to compute a bunch of
+Jacobians. This doesn't necessarily cause too much trouble, since given the
+dynamics model we can simply write out the Taylor expansions on paper and then
+code them up. I can think of two reasons why we might prefer a workaround for
+this:
+
+1. The state-control space is large, so deriving the Jacobians could be very
+   time consuming and/or error-prone (or you're simply too lazy to derive the
+   Jacobians)
+1. You don't actually have an explicit dynamics model (for instance, perhaps you
+   have a powerful simulator instead)
+
+Fortunately, we can automatically approximate Jacobians using the method of
+[finite differences](https://en.wikipedia.org/wiki/Finite_difference_method),
+which is so easy to implement that it's almost irresistible. The method
+essentially works by perturbing each variable to be differentiated by some small
+$$\epsilon>0$$ in each direction and examining how that changes the output, like
+so:
+
+$$
+\frac{\partial f}{\partial x_i}\bigg\rvert_{\mathbf{x}}\approx
+\frac{f(x_1,\dots, x_i+\epsilon,\dots x_n) - f(x_1,\dots, x_i - \epsilon,\dots
+    x_n)}{2\epsilon}
+$$
+
+If the function $$f$$ is "smooth enough", we can approximate the Jacobian
+arbitrarily well by shrinking $$\epsilon$$. For example, approximating the
+Jacobian with respect to states for a dynamics function $$f:\mathbf{R}^n\times
+\mathbf{R}^{n_u}\to\mathbf{R}^n$$ can be achieved as follows:
+
+~~~python
+def finite_differences(dynamics, x, u, eps):
+  n = x.shape[0]
+  jacobian = np.zeros((n, n))
+  for i in range(n):
+    dxp = x.copy()
+    dxp[i] += eps
+    x_inc = dynamics(dxp, u)
+    dxm = x.copy()
+    dxm[i] -= eps
+    x_dec = dynamics(dxm, u)
+    jacobian[:, i] = (x_inc - x_dec) / (2 * eps)
+  return jacobian
+~~~
