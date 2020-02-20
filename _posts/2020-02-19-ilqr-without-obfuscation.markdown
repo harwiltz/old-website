@@ -425,6 +425,36 @@ experiencing. Combining gradient clipping with line search or adaptive step
 sizes would likely be the most robust strategy, however gradient clipping on its
 own was more than sufficient enough for my purposes.
 
+## Scaling Cost Function Weights
+
+This trick allowed me to design my cost functions with much more intuition,
+which proved to be very helpful. Firstly, if you distinguish $$Q_f$$ from $$Q$$,
+the influence of the penalties governed by $$Q$$ to the total trajectory cost
+will devastatingly outweigh that of $$Q_f$$ for long time horizons. It might
+even be wise to let $$Q = 0$$ if you mostly care about penalizing state at the
+end of the trajectory. Otherwise, I found that scaling $$Q$$ by a factor of
+$$1/T$$ helped design $$Q$$ and $$Q_f$$ quite a bit.
+
+Moreover, if the state variables are measured on different scales, this should
+be compensated for. Let's say you want to penalize deviations in angle twice as
+much as deviations in velocity. Angles are confined to $$[0,2\pi]$$, while
+velocities could be much larger, say in the range $$[-v_{\max},v_{\max}]$$.
+Therefore it doesn't suffice to assign twice the weight to deviations in angle,
+since a deviation of $$\pi$$ radians is most likely much more significant than a
+deviation of $$\pi$$ in velocity. Let $$r_i$$ denote the range of state $$i$$,
+which would be $$2\pi$$ for angles and $$2v_{\max}$$ for the velocity
+example. To compensate for changes of scale, let $$\tilde{Q}$$ be the
+"intuitive" cost matrix (that is, one where you assign twice the weight to a
+state deviation you want to penalize twice as much), and compute $$Q$$ according
+to
+
+<div>
+$$
+Q = \begin{pmatrix}r_1^{-1} & 0 & \dots & 0\\0 & r_2^{-1} & \dots & 0\\0 & 0 &
+\ddots & \vdots\\0 & 0 & \dots & r_n^{-1}\\\end{pmatrix}\tilde{Q}
+$$
+</div>
+
 ## Computing Jacobians the Lazy Way
 
 In the derivation of the iLQR optimization math, we needed to compute a bunch of
