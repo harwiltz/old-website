@@ -209,7 +209,7 @@ Q^{(t)}_{xx} &\triangleq \frac{\partial^2 Q_{t:T}}{\partial x^2}\bigg\rvert_{x_t
 Q^{(t)}_{uu} &\triangleq \frac{\partial^2 Q_{t:T}}{\partial u^2}\bigg\rvert_{x_t,
   u_t} = \frac{\partial^2\ell}{\partial u^2}\bigg\rvert_{x_t,u_t} +
   \frac{\partial^2 V_{t+1:T}}{\partial u^2}\bigg\rvert_{x_t, u_t} = R + B_t^\top
-  N_{t+1}A_t\\
+  N_{t+1}B_t\\
 Q^{(t)}_{xu} = Q^{(t)\top}_{ux} &\triangleq \frac{\partial^2Q_{t:T}}{\partial u\partial
   x}\bigg\rvert_{x_t, u_t} = \frac{\partial^2\ell}{\partial u\partial
     x}\bigg\rvert_{x_t, u_t} + \frac{\partial^2 V_{t+1:T}}{\partial u\partial x}
@@ -220,28 +220,29 @@ $$
 
 You may be concerned about the dependence of these matrices on the $$M$$ and $$N$$
 matrices "from the future", but fortunately we can solve for these matrices
-backwards in time (hence, the backwards update step). Note that at $t=T$ (the
+backwards in time (hence, the backwards update step). Note that at $$t=T$$ (the
 end of the horizon), the cost to go is $$V_{T:T}(x_T) = \ell(x_T) = x_T^\top Q_f
 x_T$$, where we optionally specify another cost matrix $$Q_f$$ to distinguish
 "transient" penalties from the penalty on the final state. Therefore, by
 \eqref{eq:dV}, we have
-$$M_{T} = Q_f(x_T - x^*)$$, and $$N_T = Q_f$$. With this edge case, we can
-compute the Jacobian matrices backward from $$t=T$$ to $$t=0$$.
+$$M_{T} = Q_f(x_T - x^*)$$ for target state $$x^*$$, and $$N_T = Q_f$$. With
+this edge case, we can compute the Jacobian matrices backward from $$t=T$$ to
+$$t=0$$.
 
 To minimize the cost-to-go $$V_{t:T}(x_t)$$, we must solve for $$\delta u_t =
 \arg\min_{\delta u_t}\delta Q_{t:T}$$. We proceed to do this using standard
 calculus optimization techniques. Due to Bellman's principle of optimality, we
-can simply optimize $\delta u_t$ individually for each timestep. Referring to
+can simply optimize $$\delta u_t$$ individually for each timestep. Referring to
 \eqref{eq:dQ}, have
 
 <div>
 $$
 \begin{align}
 \delta u_t &= \arg\min_{\delta u_t}\delta Q_{t:T}\\
-\frac{\partial\delta Q_{t:T}}{\partial \delta u_t} &= 0\\
-\frac{\partial}{\partial\delta u_t}\left[\frac{1}{2}\left(2\delta
-    u_t^\top Q^{(t)}_{ux}\delta x_t + \delta u_t^\top Q^{(t)}_{uu}\delta u_t + Q^{(t)}_u\delta u_t\right) + Q^{(t)}_u\delta u_t\right] &= 0\\
-Q^{(t)}_{ux}\delta x_t + Q^{(t)}_{uu}\delta u_t + Q_u^{(t)} &= 0\\
+0 &= \frac{\partial\delta Q_{t:T}}{\partial \delta u_t}\\
+0 &= \frac{\partial}{\partial\delta u_t}\left[\frac{1}{2}\left(2\delta
+    u_t^\top Q^{(t)}_{ux}\delta x_t + \delta u_t^\top Q^{(t)}_{uu}\delta u_t + Q^{(t)}_u\delta u_t\right) + Q^{(t)}_u\delta u_t\right]\\
+0 &= Q^{(t)}_{ux}\delta x_t + Q^{(t)}_{uu}\delta u_t + Q_u^{(t)}\\
 \delta u_t &= -(Q^{(t)}_{uu})^{-1}Q_{ux}^{(t)}\delta x_t -
 (Q^{(t)}_{uu})^{-1}Q_u^{(t)}
 \end{align}
@@ -256,12 +257,12 @@ $$
 \end{equation}
 $$
 
-where $$K_t = -(Q_{uu}^{(t)})^{-1}Q_{ux}$$ and $$d_t =
+where $$K_t = -(Q_{uu}^{(t)})^{-1}Q^{(t)}_{ux}$$ and $$d_t =
 -(Q_{uu}^{(t)})^{-1}Q^{(t)}_u$$, so optimal changes to controls at each step are
 affine transformations of the measured error in state (we will discuss how this
 state error is calculated soon).
 
-Recall that in order to compute these gains, we need the $M$ and $N$ matrices
+Recall that in order to compute these gains, we need the $$M$$ and $$N$$ matrices
 for each timestep. First, substitute the $$\delta u_t$$ computed in
 \eqref{eq:du} into \eqref{eq:dQ}:
 
@@ -289,12 +290,12 @@ K^\top_tQ^{(t)}_u\tag{Mt}\label{eq:Mt}
 \end{equation}
 $$
 
-Similarly, since $N_t$ is the term that is quadratic in $$\delta x_t$$, we have
+Similarly, since $$N_t$$ is the term that is quadratic in $$\delta x_t$$, we have
 
 $$
 \begin{equation}
 N_t = Q^{(t)}_{xx} + K_t^\top Q^{(t)}_{ux} + Q_{ux}^{(t)\top} K_t + K_t^\top
-Q_{uu}K_t\tag{Nt}\label{eq:Nt}
+Q^{(t)}_{uu}K_t\tag{Nt}\label{eq:Nt}
 \end{equation}
 $$
 
