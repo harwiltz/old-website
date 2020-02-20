@@ -385,6 +385,46 @@ Since iLQR is an iterative nonlinear optimization algorithm, initialization can
 definitely have an affect on the final controller. Playing with various
 initialization schemas would be wise.
 
+## Gradient Clipping
+
+I cannot emphasize enough how **essential** this trick was. When tuning my iLQR
+implementation, I noticed that the controller would fail to swing up the pole
+because it wouldn't accelerate fast enough, which I attributed to penalizing
+velocities and control magnitudes too much. But when I would try reducing these
+penalties, iLQR would outright explode: velocities and angular velocities would
+shoot up, and the loss would skyrocket, leading to a completely abysmal final
+trajectory. After further inspection, I noticed that $$|\delta u_t|$$
+was blowing up. To prevent this from happening, I implemented the following
+adjustment
+
+$$
+\delta u_t = \text{sgn}(K_t\delta x_t + d_t)\min(K_t\delta x_t + d_t, \Delta)
+$$
+
+where $$\text{sgn}(x) = |x|/x$$, which essentially clips the control updates to
+some magnitude $$\Delta$$. Note that while this transformation is defined for
+scalar controls, an equivalent transformation for vector controls can be derived
+without much trouble. Upon employing this trick, these divergence issues ceased
+**immediately**. This allowed me to be much more flexible with my cost
+functions, and ultimately allowed me to tune my iLQR to a competent solution in
+a finite amount of time.
+
+This trick *does* impose an additional hyperparameter, however in my experiments
+I found that this hyperparameter was very easy to tune. Moreover, when
+$$\Delta$$ is "too low", the only consequence is that iLQR won't make progress
+as quickly, which normally isn't such a big deal.
+
+Alternatively, line search methods or adjustable (perhaps even adaptive) $$\delta
+u_t$$ step sizes could potential help solve this problem. However, these methods
+involve hyperparameters of their own, and I still believe gradient clipping
+could be necessary -- for instance, say you update $$u_t\leftarrow\bar{u}_t +
+\alpha\delta u_t$$ for some small step size $$\alpha$$, but $$||\delta u_t||$$
+is enormous. The small step size would dampen the effect of this, but without
+forcing *very* small step sizes, this can't eliminate the divergence issue I was
+experiencing. Combining gradient clipping with line search or adaptive step
+sizes would likely be the most robust strategy, however gradient clipping on its
+own was more than sufficient enough for my purposes.
+
 ## Computing Jacobians the Lazy Way
 
 In the derivation of the iLQR optimization math, we needed to compute a bunch of
