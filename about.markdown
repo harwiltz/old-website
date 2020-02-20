@@ -10,8 +10,8 @@ I am a first year M.Sc. student at the [Mobile Robotics
 Lab](https://www.cim.mcgill.ca/~mrl) at McGill University in Montreal, Canada. I am
 fortunately supervised by [David Meger](https://www.cim.mcgill.ca/~dmeger). My
 research interests are primarily concerned with reinforcement learning, and
-particularly with methods of modeling uncertainty in reinforcement learning
-methods to improve safety and exploration.
+particularly with methods of modeling uncertainty to improve safety and
+exploration.
 
 Previously, I was a Computer Engineering undergrad at McGill, and my studies
 were focused on signal processing, control, machine learning, and software
