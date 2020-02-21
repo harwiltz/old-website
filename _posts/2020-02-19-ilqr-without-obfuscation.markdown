@@ -501,3 +501,13 @@ def finite_differences(dynamics, x, u, eps):
     jacobian[:, i] = (x_inc - x_dec) / (2 * eps)
   return jacobian
 ~~~
+
+## References
+
+1. [Li and Todorov -- Iterative Linear Quadratic Regulator Design for Nonlinear
+   Biological Movement
+   Systems](https://homes.cs.washington.edu/~todorov/papers/LiICINCO04.pdf)
+1. [Jackson and Howell -- iLQR
+   Tutorial](https://rexlab.stanford.edu/papers/iLQR_Tutorial.pdf)
+1. [Travis DeWolf -- The Iterative Linear Quadratic Regulator
+   Algorithm](https://studywolf.wordpress.com/2016/02/03/the-iterative-linear-quadratic-regulator-method/)
