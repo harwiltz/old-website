@@ -1,0 +1,18 @@
+\documentclass{standalone}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{tikz}
+\usepackage{pgfplots}
+
+\begin{document}
+  \pgfmathdeclarefunction{func}{1}{%
+    \pgfmathparse{%
+    (#1<=0.2121) * (0.3^#1) +%
+    (#1>0.2121) * (2 * 0.3^(1 - #1))
+  }%
+  }
+  \begin{tikzpicture}
+    \begin{axis}[xmin=0,xmax=1]
+      \addplot[-,blue,domain=0:1] {func(x)};
+    \end{axis}
+  \end{tikzpicture}
+\end{document}
