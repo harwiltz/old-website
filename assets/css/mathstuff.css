@@ -11,6 +11,28 @@ body {
   text-align: justify;
 }
 
+.theorem .statement {
+  display: none;
+}
+
+.theorem .tldr {
+  display: block;
+}
+
+.theorem:hover .statement {
+  display: block;
+}
+
+.theorem:hover .tldr {
+  display: none;
+  background-color: #ffffaa;
+}
+
+.theorem:hover {
+  border: none;
+  box-shadow: 0 0 16px 8px rgba(0, 0, 0, 0.2);
+}
+
 .definition {
   display: block;
   margin: 2em;
