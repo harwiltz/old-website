@@ -204,7 +204,7 @@ Now we can define the viscosity solutions.
 
 <div class="definition">
 <b>Definition (Viscosity Supersolution):</b> A viscosity supersolution is a function in
-\(\mathcal{C}(\mathcal{X})\) such that for every \(\phi\in\mathcal{D}(\mathcal{X})^{-}\) and
+\(\mathcal{C}(\mathcal{X})\) such that for every \(\phi\in\mathcal{D}(\mathcal{X})^{+}\) and
 \(k\in\mathbf{R}\) we have
 
 \begin{align}
