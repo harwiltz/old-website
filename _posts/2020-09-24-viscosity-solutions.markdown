@@ -221,8 +221,46 @@ subsolution and a viscosity supersolution.
 
 ## The Value Function as the Unique Viscosity Solution
 
-The goal now is to study how to construct a value function $$V\in C(\mathcal{X})$$ (note, this is
-continuous but not necessarily differentiable) that solves the Hamiltonian equations above. Rather
-than searching through all of $$C(\mathcal{X})$$, we consider functions with some properties such
-that there can only be one such function that satisfies the Hamiltonian equation (hence, the HJB
-equation).
+We'll now show a beautiful property of viscosity solutions, that being that viscosity solutions
+$$H(x, V, DV) = 0$$ (and therefore viscosity solutions of the HJB equation) are unique. We'll go
+over a proof from the seminal paper by Crandall and Lions.
+
+<div class="theorem">
+<b>Theorem (Uniqueness of Viscosity Solutions):</b> Let \(V\) be a bounded viscosity subsolution of
+                                                 \(H(x, V, DV) = 0\) and let \(V'\) be a bounded
+                                                 viscosity supersolution of \(H(x, V', DV') =
+                                                 m(x)\), where \(m:\mathbf{R}^N\to\mathbf{R}\) is a
+                                                 bounded continuous function. Moreover, let \(R_0 =
+                                                 \max(\|V\|_{L^{\infty}(\mathbf{R}^N)},
+                                                     \|V'\|_{L^{\infty}(\mathbf{R}^N)})\). We make
+                                                     the following assumptions:
+<ol>
+  <li>
+    For any \(R > 0\), \(H\) is uniformly continuous on \(\mathbf{R}^N\times[-R,R]\times B(0,R)\)
+  </li>
+  <li>
+    For each \(R > 0\), there is a continuous non-decreasing function
+    \(\gamma_R:[0,2R]\to\mathbf{R}\) with \(\gamma_R(0)=0\) and
+
+    $$
+    H(x, r, p) - H(x, s, p)\geq\gamma_R(r - s)
+    $$
+
+    for each \(x, p\) and \(r, s\in[-R,R]\) with \(r\geq s\).
+  </li>
+  <li>
+    For each \(R_1,R_2>0\), the following holds:
+    \begin{align}
+    \limsup_{\varepsilon\downarrow 0}\{&|H(x, r, p) - H(y, r, p)| :\\&|p(x-y)|\leq R_1,
+    |x-y|\leq\varepsilon, r\leq R_2\} = 0
+    \end{align}
+  </li>
+</ol>
+Then, we have
+
+$$
+\|\gamma((V-V')^{+})\|_{L^{\infty}(\mathbf{R}^N)}\leq\|m^{+}\|_{L^{\infty}(\mathbf{R}^N)}
+$$
+
+where \(f^+ = \max(f, 0)\).
+</div>
