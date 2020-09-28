@@ -10,3 +10,12 @@ body {
   border: 1px solid rgba(0, 0, 0, 0.2);
   text-align: justify;
 }
+
+.definition {
+  display: block;
+  margin: 2em;
+  padding: 8px;
+  background-color: #00eef2;
+  border: 1px solid rgba(0.2, 0.0, 0.2, 0.2);
+  text-align: justify;
+}

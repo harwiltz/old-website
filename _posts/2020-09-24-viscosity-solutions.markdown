@@ -60,4 +60,169 @@ V^\pi(x)\ln\gamma = R + \underset{a\sim\pi(\cdot\mid x)}{\mathbf{E}}\bigg\langle
 f(x, a)\bigg\rangle
 $$
 
-where $$f(x, a)\triangleq\frac{d}{dt}x$$.
+where $$f(x, a)\triangleq\frac{d}{dt}x$$. Note that a differentiable value function satisfies the
+HJB equation. However, as we'll see, even very simple continuous time MDPs can admit
+non-differentiable value functions.
+
+# A Problematic MDP
+
+Remi Munos proposed a very simple continuous-time MDP in the paper cited above that demonstrates
+some issues that can arise if we naively adapt familiar RL algorithms to continuous time.
+
+## The Munos MDP
+
+The MDP has state space $$\mathcal{X}=[0,1]$$ and action space $$\mathcal{A}=\{\pm 1\}$$. We control
+a particle with dynamics satisfying $$\dot{x}(t) = a(t)$$, where $$\dot{x}(t)$$ and $$a(t)$$ are the
+velocity of the particle and the chosen action respectively at time $$t$$. For any $$x\in (0, 1)$$
+the agent receives no reward, and at the endpoints the rewards are given by constants $$R_0$$ and
+$$R_1$$ for $$x = 0$$ and $$x=1$$ respectively. We will set $$R_0=1$$ and $$R_1=2$$. We also use a
+discount factor $$\gamma=0.3$$.
+
+## The Optimal Policy
+
+It's relatively easy to compute the optimal policy for the Munos MDP. Clearly there will be a
+threshold point $$\overline{x}$$ such that the optimal policy $$\pi^{\star}$$ will satisfy
+
+$$
+\pi^{\star}(a\mid x) = -\mathbf{1}_{[x\leq\overline{x}]} + \mathbf{1}_{[x>\overline{x}]}
+$$
+
+## The Value Function
+
+It's also fairly easy to derive the value function analytically. When $$x\leq\overline{x}$$, we have
+
+$$V(x) = R_0\gamma^{x} = 0.3^{x}$$
+
+Similarly, when $$x>\overline{x}$$, we have
+
+$$V(x) = R_1\gamma^{1-x} = 2(0.3)^{1-x}$$
+
+Moreover, note that $$\overline{x}$$ by definition satisfies
+
+$$
+R_0\gamma^{\overline{x}} = R_1\gamma^{1-\overline{x}}
+$$
+
+After some simple algebra, we find that $$\overline{x} = \frac{\log (R_1/R_0)}{2\log\gamma} +
+\frac{1}{2}$$. The value function looks like
+
+![](/assets/img/viscosity/viscosity-graph.png)
+
+Notice that at $$\overline{x}$$ the value function is not differentiable. Does this mean that it
+cannot solve the HJB equation?
+
+You might also be curious about why the continuous-time setting introduces this issue -- after all,
+the value function does not depend on time. However, the derivative of the value function with
+respect to $$x$$ arise from the chain rule when computing $$dV/dt$$ in the derivation of the HJB
+equation. Very subtle.
+
+# Viscosity Solutions to the Rescue
+
+As we saw, simple MDPs can have non-differentiable value functions, but the HJB equation requires
+computation of the value function's gradient. If we try to settle for
+almost-everywhere-differentiable functions, we lose uniqueness guarantees, so there can potentially
+be a bunch of functions satisfying the HJB that don't actually compute the expected return. However,
+it can be shown that the HJB equation admits unique *viscosity solutions*, which exhibit exactly
+those properties that we'd like from the value function.
+
+## What is a Viscosity Solution?
+
+A viscosity solution is a function obeying some properties (don't even try to understand these yet)
+that satisfy partial differential equations of the form
+
+$$
+H(x, v, Dv) = 0
+$$
+
+where we'll interpret $$x$$ as a state, $$v$$ as a value function, and $$Dv = \nabla_xv$$.
+Furthermore, $$H$$ is an arbitrary function that is monotonically non-decreasing in $$v$$, known as
+the Hamiltonian. In the case of the HJB equation, we see that
+
+$$
+H(x, V, DV) = -V(x)\ln\gamma + R + \bigg\langle\nabla_xV(x), f(x, \pi^{\star}(x))\bigg\rangle
+$$
+
+At a high level, viscosity solutions are continuous functions that are differentiable almost
+everywhere.
+
+## Intro to the Design of Viscosity Solutions
+
+I'll conjecture that without ever having been exposed to the concept of viscosity solutions, simply
+looking at the definition will be fairly demoralizing. According to Crandall and Lions in their
+seminal paper on the topic, the following is what led to the development of the theory of viscosity
+solutions. Let's start by assuming that $$V\in C^1(\mathcal{X})$$ (note that we of course don't want
+to restrict viscosity solutions to functions of this class!). Consider another function $$\phi\in
+C^1(\mathcal{X})$$, where $$\phi(x)V(x) = \max\phi V$$ at some state $$x$$, and $$\phi(x)V(X)>0$$.
+Note that
+
+$$
+D(\phi V) = D\phi V + \phi DV
+$$
+
+This leads us to the following representation of $$DV(x)$$,
+
+$$
+DV(x) = -\frac{V(x)}{\phi(x)}D\phi(x)
+$$
+
+since, by definition, $$D(\phi V)(x) = 0$$.
+
+Therefore, it suffices to equivalently solve
+
+$$
+H\left(x, V(x), -\frac{V(x)}{\phi(x)}D\phi(x)\right) = 0
+$$
+
+The ingenuity in Crandall and Lions' design of the notion of a viscosity solution revolves around
+allowing stronger smoothness assumptions on $$\phi$$ than an $$V$$.
+
+## The Definition of a Viscosity Solution
+
+The properties of a viscosity solution are heavily inspired by the discussion above. Let
+$$\mathcal{X}\subset\mathbf{R}^N$$ and $$\mathcal{D}(\mathcal{X})^{+}$$ denotes the continuously
+differentiable, positive functions supported on compact subsets of $$\mathcal{X}$$. We also say
+
+$$E_{+}(f)\triangleq\{x\in\mathcal{X}\mid f(x) = \max f > 0\}$$
+
+and likewise
+
+$$E_{-}(f)\triangleq \{x\in\mathcal{X}\mid f(x) = \min f \lt 0\}$$
+
+Now we can define the viscosity solutions.
+
+<div class="definition">
+<b>Definition (Viscosity Subsolution):</b> A viscosity subsolution is a function in
+\(\mathcal{C}(\mathcal{X})\) such that for every \(\phi\in\mathcal{D}(\mathcal{X})^{+}\) and
+\(k\in\mathbf{R}\) we have
+
+\begin{align}
+&E_{+}(\phi\cdot(u-k))\neq\emptyset\implies\\&\quad\exists y\in E_{+}(\phi(u-k)): H\left(y, V(y), -\frac{V(y) -
+    k}{\phi(y)}D\phi(y)\right)\leq 0
+\end{align}
+
+</div>
+
+<div class="definition">
+<b>Definition (Viscosity Supersolution):</b> A viscosity supersolution is a function in
+\(\mathcal{C}(\mathcal{X})\) such that for every \(\phi\in\mathcal{D}(\mathcal{X})^{-}\) and
+\(k\in\mathbf{R}\) we have
+
+\begin{align}
+&E_{-}(\phi\cdot(u-k))\neq\emptyset\implies\\&\quad\exists y\in E_{-}(\phi(u-k)): H\left(y, V(y), -\frac{V(y) -
+    k}{\phi(y)}D\phi(y)\right)\geq 0
+\end{align}
+
+</div>
+
+<div class="definition">
+<b>Definition (Viscosity Solution):</b> A viscosity solution is a function that is both a viscosity
+subsolution and a viscosity supersolution.
+</div>
+
+## The Value Function as the Unique Viscosity Solution
+
+The goal now is to study how to construct a value function $$V\in C(\mathcal{X})$$ (note, this is
+continuous but not necessarily differentiable) that solves the Hamiltonian equations above. Rather
+than searching through all of $$C(\mathcal{X})$$, we consider functions with some properties such
+that there can only be one such function that satisfies the Hamiltonian equation (hence, the HJB
+equation).
