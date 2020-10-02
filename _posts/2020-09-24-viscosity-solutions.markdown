@@ -279,3 +279,75 @@ over a proof from the seminal paper by Crandall and Lions.
     where \(f^+ = \max(f, 0)\).
   </span>
 </div>
+
+First thing's first, we wanted to examine the uniqueness of viscosity solutions to the HJB equation.
+What does the above theorem say with regard to this? Well, consider $$m\equiv 0$$. Then, when the
+theorem holds, it follows that both $$\|\gamma((V-V')^+)\|_{L^\infty}\leq 0$$ and
+$$\|\gamma((V'-V)^+)\|_{L^\infty}\leq 0$$. Equivalently, this means that $$\|\gamma(V -
+V')\|_{L^\infty}\leq 0$$. However, since $$\gamma$$ is non-decreasing and $$\gamma(0) = 0$$, it
+follows that $$\|V-V'\|_{L^\infty}\leq 0$$, and $$V\equiv V'$$ -- this ensures that viscosity
+solutions are unique.
+
+Now let's take a look at how this theorem works. We'll concern ourselves simply with the $$m\equiv
+0$$ scenario for simplicity, and because this is the relevant setting for the HJB equation. Let
+$$\phi\in\mathcal{D}(\mathbf{R}^N)^+$$ where $$\phi\in[0,1]$$ and $$\phi(0) = 0$$. Define
+
+$$
+M\triangleq\max_{x, y\in\mathbf{R}^N}\phi(x - y)(V(x) - V'(y))
+$$
+
+Note that $$V(x) - V'(Y)\leq M$$ regardless of the particular choice of $$\phi$$, which implies that
+$$\|V-V'\|_{L^\infty(\mathbf{R}^N)}\leq M$$.
+
+Now define, for any $$\varepsilon>0$$,
+
+<div>
+\begin{align}
+M_\varepsilon&\triangleq\max_{x,y\in\mathbf{R}^N}\phi(x - y)(e^{-\varepsilon|x|^2}V(x) -
+    e^{-\varepsilon|y|^2}V'(y))\\&\triangleq\phi(x_\varepsilon-y_\varepsilon)(e^{-\varepsilon|x_\varepsilon|^2}V(x_\varepsilon)
+    - e^{-\varepsilon|y_\varepsilon|^2}V'(y_\varepsilon))
+\end{align}
+</div>
+
+Since $$\lim_{\varepsilon\to 0}e^{-\varepsilon x^2} = 0$$, and $$V, V'$$ are continuous, it follows
+that $$\lim\inf_{\varepsilon\downarrow 0}M_\varepsilon\geq M$$. Now let $$\phi$$ have support
+$$B(0,\alpha)$$ (the open ball of radius $$\alpha$$), to ensure that
+$$|x_\varepsilon-y_\varepsilon|\leq\alpha$$ for some fixed $$\alpha\geq 0$$. Note that if $$|x|$$ or
+$$|y|$$ are unbounded, we'd have
+
+$$
+M_{\varepsilon}\overset{|x_\varepsilon|\uparrow\infty}{\longrightarrow} 0 \lt M
+$$
+
+We conclude that $$\lvert x_\varepsilon\rvert$$ and $$\lvert y_\varepsilon\rvert$$ must be bounded, and say
+
+$$
+|x_\varepsilon|,|y_\varepsilon|\leq C/\sqrt\varepsilon
+$$
+
+for some $$C\in\mathbf{R}$$. Proceeding with some algebra, we have
+
+<div>
+\begin{align}
+M_\varepsilon&\leq\phi(x_\varepsilon-y_\varepsilon)\left(V(x_\varepsilon) -
+    e^{\varepsilon(|x_\varepsilon|^2 - |y_\varepsilon|^2)}V'(y_\varepsilon)\right)\\
+&= \phi(x_\varepsilon-y_\varepsilon)\left(V(x_\varepsilon) - e^{\varepsilon|\langle x_\varepsilon -
+      y_\varepsilon, x_\varepsilon + y_\varepsilon\rangle|}V'(y_\varepsilon)\right)\\
+&= \phi(x_\varepsilon-y_\varepsilon)\left(V(x_\varepsilon) - V'(y_\varepsilon) + (1 - e^{\varepsilon|\langle x_\varepsilon -
+      y_\varepsilon, x_\varepsilon + y_\varepsilon\rangle|})V'(y_\varepsilon)\right)\\
+&\leq M + \left\lvert 1 - e^{\varepsilon|\langle x_\varepsilon - y_\varepsilon, x_\varepsilon +
+  y_\varepsilon\rangle|}\right\rvert V'(y_\varepsilon)
+\end{align}
+
+But, we have
+
+\begin{align}
+\varepsilon\lvert\langle x_\varepsilon - y_\varepsilon, x_\varepsilon+y_\varepsilon\rangle\rvert &\leq
+\varepsilon(|x_\varepsilon| + |y_\varepsilon|)|x_\varepsilon - y_\varepsilon|\\
+&\leq 2\varepsilon\left(\frac{C}{\sqrt\varepsilon}\right)\alpha\\
+&= 2\sqrt\varepsilon C\alpha
+\end{align}
+</div>
+
+Therefore, we have $$M\leq\lim_{\varepsilon\downarrow 0}M_{\varepsilon}\leq M$$, so
+$$M_\varepsilon\to M$$.
