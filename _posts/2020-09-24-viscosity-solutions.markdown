@@ -290,7 +290,7 @@ solutions are unique.
 
 Now let's take a look at how this theorem works. We'll concern ourselves simply with the $$m\equiv
 0$$ scenario for simplicity, and because this is the relevant setting for the HJB equation. Let
-$$\phi\in\mathcal{D}(\mathbf{R}^N)^+$$ where $$\phi\in[0,1]$$ and $$\phi(0) = 0$$. Define
+$$\phi\in\mathcal{D}(\mathbf{R}^N)^+$$ where $$\phi\in[0,1]$$ and $$\phi(0) = 1$$. Define
 
 $$
 M\triangleq\max_{x, y\in\mathbf{R}^N}\phi(x - y)(V(x) - V'(y))
@@ -350,4 +350,134 @@ But, we have
 </div>
 
 Therefore, we have $$M\leq\lim_{\varepsilon\downarrow 0}M_{\varepsilon}\leq M$$, so
-$$M_\varepsilon\to M$$.
+$$M_\varepsilon\to M$$. Now it follows that
+
+<div>
+\begin{align}
+x_\varepsilon&\in E_+\bigg(\phi(\cdot - y_\varepsilon)e^{-\varepsilon|\cdot|^2}\left(V(\cdot)
+      - \psi_+(\cdot)\right)\bigg)\qquad\psi_+(x) = e^{\varepsilon(|x|^2 -
+    |y_\varepsilon|^2)}V'(y_\varepsilon)\\
+y_\varepsilon&\in E_-\bigg(\phi(x_\varepsilon - \cdot)e^{-\varepsilon|\cdot|^2}\left(V'(\cdot)
+      - \psi_-(\cdot)\right)\bigg)\qquad\psi_-(y) = e^{\varepsilon(|y|^2 -
+    |x_\varepsilon|^2)}V(x_\varepsilon)\\
+\end{align}
+
+So, by some simple calculus, we have
+\begin{align}
+H\bigg(x_\varepsilon, V(x_\varepsilon), -(V(x_\varepsilon) - k_+)\frac{(D\phi)(x_\varepsilon -
+      y_\varepsilon)}{\phi(x_{\varepsilon} - y_\varepsilon)} + 2\varepsilon x_\varepsilon
+    V(x_\varepsilon)\bigg) &\leq 0\\
+H\bigg(y_\varepsilon, V'(y_\varepsilon), -(k_- - V'(y_\varepsilon))\frac{(D\phi)(x_\varepsilon -
+      y_\varepsilon)}{\phi(x_{\varepsilon} - y_\varepsilon)} + 2\varepsilon y_\varepsilon
+    V'(y_\varepsilon)\bigg) &\geq 0\\
+\end{align}
+where \(k_+\triangleq\psi_+(x_\varepsilon), k_-\triangleq\psi_-(y_\varepsilon)\).
+</div>
+
+Now let's define some terms for shorthand,
+
+<div>
+\begin{align}
+\lambda_\varepsilon&\triangleq -(V(x_\varepsilon) - V'(y_\varepsilon))\frac{(D\phi)(x_\varepsilon -
+    y_\varepsilon)}{\phi(x_\varepsilon - y_\varepsilon)}\\
+\delta_\varepsilon^+&\triangleq\left(e^{\varepsilon(|x_\varepsilon|^2 - |y_\varepsilon|^2)} -
+    1\right)V'(y_\varepsilon)\frac{(D\phi)(x_\varepsilon - y_\varepsilon)}{\phi(x_\varepsilon - y_\varepsilon)} +
+2\varepsilon x_\varepsilon V(x_\varepsilon)\\
+\delta_\varepsilon^-&\triangleq\left(1-e^{\varepsilon(|y_\varepsilon|^2 -
+      |x_\varepsilon|^2)}\right)V(x_\varepsilon)\frac{(D\phi)(x_\varepsilon - y_\varepsilon)}{\phi(x_\varepsilon -
+      y_\varepsilon)} + 2\varepsilon y_\varepsilon V'(y_\varepsilon)\\
+\end{align}
+This way, we have
+\begin{align}
+H(x_\varepsilon, V(x_\varepsilon), \lambda_\varepsilon + \delta_\varepsilon^+)&\leq 0\\
+H(y_\varepsilon, V'(y_\varepsilon), \lambda_\varepsilon + \delta_\varepsilon^-)&\geq 0\\
+\therefore H(x_\varepsilon, V(x_\varepsilon), \lambda_\varepsilon + \delta_\varepsilon^+)-H(y_\varepsilon,
+    V'(y_\varepsilon), \lambda_\varepsilon + \delta_\varepsilon^-)&\leq 0\\
+\end{align}
+</div>
+
+By assumption, we know that
+
+$$
+H(x_\varepsilon, V(x_\epsilon), \lambda_\varepsilon + \delta^+_\varepsilon) - H(x_\varepsilon,
+    V'(y_\varepsilon), \lambda_\varepsilon + \delta^+_\varepsilon)\geq\gamma(V(x_\varepsilon) -
+    V'(y_\varepsilon))
+$$.
+
+So, we rewrite the inequality above as follows,
+
+<div>
+\begin{align}
+  &\left[H(x_\varepsilon, V(x_\varepsilon), \lambda_\varepsilon + \delta_\varepsilon^+) -
+  H(x_\varepsilon, V'(y_\varepsilon), \lambda_\varepsilon + \delta_\varepsilon^+)\right]\\
+  &\qquad + \left[H(x_\varepsilon, V'(y_\varepsilon), \lambda_\varepsilon +
+      \delta^+_\varepsilon) - H(y_\varepsilon, V'(y_\varepsilon), \lambda_\varepsilon +
+        \delta^+_\varepsilon)\right]\\
+        &\qquad + \left[H(y_\varepsilon, V'(y_\varepsilon), \lambda_\varepsilon +
+            \delta^+_\varepsilon) - H(y_\varepsilon, V'(y_\varepsilon), \lambda_\varepsilon +
+              \delta^-_\varepsilon)\right]\leq 0
+\end{align}
+</div>
+
+We can now conclude, since $$V(x_\varepsilon) - V'(y_\varepsilon)\geq M_\varepsilon$$ and $$\gamma$$
+is non-decreasing, that
+
+<div>
+\begin{align}
+\gamma(M_\varepsilon)&\leq A_\varepsilon + B_\varepsilon\\
+    A_\varepsilon&\triangleq\left\lvert H(x_\varepsilon, V'(y_\varepsilon), \lambda_\varepsilon +
+        \delta^+_\varepsilon) - H(y_\varepsilon, V'(y_\varepsilon), \lambda_\varepsilon +
+          \delta^+_\varepsilon)\right\rvert\\
+    B_\varepsilon&\triangleq\left\lvert H(y_\varepsilon, V'(y_\varepsilon), \lambda_\varepsilon +
+        \delta^+_\varepsilon) - H(y_\varepsilon, V'(y_\varepsilon), \lambda_\varepsilon +
+          \delta^-_\varepsilon)\right\rvert\\
+\end{align}
+</div>
+
+We'll proceed by analyzing $$A_\varepsilon$$. Since $$x_\varepsilon, y_\varepsilon$$ maximize
+$$\phi(x_\varepsilon - y_\varepsilon)(V(x_\varepsilon) - V'(y_\varepsilon))$$,
+  $$\lim\inf_{\varepsilon\downarrow 0}\phi(x_\varepsilon - y_\varepsilon) = 0$$ implies that
+  $$V(x_\varepsilon) - V'(y_\varepsilon) = 0$$. In either case, since $$V,
+  V'$$ are bounded, $$0\leq\phi\leq 1$$, and $$\phi(0) = 1$$, we have
+
+<div>
+\begin{align}
+\lim\sup_{\varepsilon\downarrow 0}\left\lvert\lambda_\varepsilon +
+\delta_\varepsilon^+\right\rvert\leq K +
+2\varepsilon\alpha\frac{C}{\sqrt{\varepsilon}}V(x_\varepsilon)\leq K\in\mathbf{R}
+\end{align}
+</div>
+
+Now, since $$\lvert x_\varepsilon - y_\varepsilon\lvert\leq\alpha$$, we have
+
+<div>
+\begin{align}
+\lim\sup_{\varepsilon\downarrow 0}A_\varepsilon\leq\sup\left\{H(x, V'(y), p)\bigg\lvert \lvert
+x-y\rvert\leq\alpha, |x-y||p|\leq \alpha K, V'(y)\leq R_0\right\} = 0
+\end{align}
+where the final equality holds by assumption 3.
+</div>
+
+Finally, we analyze $$B_\varepsilon$$. As discussed in the analysis of $$A_\varepsilon$$,
+  $$\lambda_\varepsilon$$ must be bounded, and clearly $$\delta_\varepsilon^+\to 0$$ and
+  $$\delta_\varepsilon^-\to 0$$ as $$\varepsilon\downarrow 0$$. It follows that
+
+<div>
+\begin{align}
+\lim\sup_{\varepsilon\downarrow 0}B_\varepsilon&\leq\left\lvert H\left(y_\varepsilon,
+    V'(y_\varepsilon), \lim\sup_{\varepsilon\downarrow 0}(\lambda_\varepsilon +
+      \delta_\varepsilon^+)\right) - H\left(y_\varepsilon, V'(y_\varepsilon),
+      \lim\sup_{\varepsilon\downarrow 0}(\lambda_\varepsilon +
+        \delta_\varepsilon^-)\right)\right\rvert\\
+&\leq\left\lvert H\left(y_\varepsilon, V'(y_\varepsilon),
+    \lim\sup_{\varepsilon\downarrow 0}\lambda_\varepsilon\right) - H\left(y_\varepsilon, V'(y_\varepsilon),
+      \lim\sup_{\varepsilon\downarrow 0}\lambda_\varepsilon\right)\right\rvert\\
+&= 0
+\end{align}
+</div>
+
+Thus, we arrive at the glorious conclusion that
+
+$$
+0 = \lim\sup_{\varepsilon\downarrow 0}(A_\varepsilon + B_\varepsilon)\geq\gamma\left\|\left((V-V')^+\right)\right\|_{L^\infty(\mathbf{R}^N)}
+$$
