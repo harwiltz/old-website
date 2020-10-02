@@ -155,7 +155,7 @@ W(x) =
 \end{equation}
 </div>
 
-This function was simply chosen by artbirarily placing exponential functions of the form
+This function was simply chosen by arbitrarily placing exponential functions of the form
 $$\gamma^x$$ and $$\gamma^{1-x}$$ in such a way that the values at the endpoints were correct. Note
 that if $$W(x)$$ is thought to be the value function, the optimal policy will aim to guide the agent
 towards states $$x$$ where $$W(x)$$ is high. Below is a visual of two potential value functions,
@@ -192,7 +192,7 @@ Furthermore, $$H$$ is an arbitrary function that is monotonically non-decreasing
 the Hamiltonian. In the case of the HJB equation, we see that
 
 $$
-H(x, V, DV) = -V(x)\ln\gamma + R + \bigg\langle\nabla_xV(x), f(x, \pi^{\star}(x))\bigg\rangle
+H(x, V, DV) = V(x)\ln\gamma + R + \bigg\langle\nabla_xV(x), f(x, \pi^{\star}(x))\bigg\rangle
 $$
 
 At a high level, viscosity solutions are continuous functions that are differentiable almost
