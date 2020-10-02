@@ -205,7 +205,7 @@ looking at the definition will be fairly demoralizing. According to Crandall and
 seminal paper on the topic, the following is what led to the development of the theory of viscosity
 solutions. Let's start by assuming that $$V\in C^1(\mathcal{X})$$ (note that we of course don't want
 to restrict viscosity solutions to functions of this class!). Consider another function $$\phi\in
-C^1(\mathcal{X})$$, where $$\phi(x)V(x) = \max\phi V$$ at some state $$x$$, and $$\phi(x)V(X)>0$$.
+C^1(\mathcal{X})$$, where $$\phi(x)V(x) = \max\phi V$$ at some state $$x$$, and $$\phi(x)V(x)>0$$.
 Note that
 
 $$
@@ -343,7 +343,7 @@ follows that $$\|V-V'\|_{L^\infty}\leq 0$$, and $$V\equiv V'$$ -- this ensures t
 solutions are unique.
 
 Now let's take a look at how this theorem works. We'll concern ourselves simply with the $$m\equiv
-0$$ scenario for simplicity, and because this is the relevant setting for the HJB equation. Let
+0$$ scenario for simplicity, and because this is the relevant setting for proving uniqueness. Let
 $$\phi\in\mathcal{D}(\mathbf{R}^N)^+$$ where $$\phi\in[0,1]$$ and $$\phi(0) = 1$$. Define
 
 $$
