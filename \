@@ -57,7 +57,7 @@ taking the limit as $$\tau\to\ 0$$, we arrive at what's known as the **Hamilton-
 Equation**,
 
 $$
-V^\pi(x)\ln 1/\gamma = R + \underset{a\sim\pi(\cdot\mid x)}{\mathbf{E}}\bigg\langle \nabla_xV^\pi(x),
+V^\pi(x)\ln\gamma = R + \underset{a\sim\pi(\cdot\mid x)}{\mathbf{E}}\bigg\langle \nabla_xV^\pi(x),
 f(x, a)\bigg\rangle
 $$
 
@@ -116,58 +116,6 @@ You might also be curious about why the continuous-time setting introduces this 
 the value function does not depend on time. However, the derivative of the value function with
 respect to $$x$$ arise from the chain rule when computing $$dV/dt$$ in the derivation of the HJB
 equation. Very subtle.
-
-## It Gets Worse
-
-We see that the value function for this MDP cannot be differentiable on the entire state space, but
-what if we expanded our search space to functions that are differentiable *almost everywhere* on the
-state space? It turns out this is far from a good solution, because there may actually be infinitely
-many functions that are global minima to the HJB equation. Using gradient descent methods to learn
-the value function may very well cause an algorithm to land in such a global minimum where the
-learned value function doesn't represent the true value function well at all. To illustrate this,
-let's examine the HJB equation at any point in the interior of the state space. In this region, the
-reward is always $$0$$. The HJB equation collapses to
-
-$$
-V^\pi(x)\ln\gamma = -\langle\nabla_x V^\pi(x), f(x, \pi(x))\rangle
-$$
-
-where we assume stochastic dynamics purely to simplify the problem. In this MDP, $$f \in \{\pm
-1\}$$, so we actually have
-
-$$
-V^\pi(x)\ln\gamma = -\left\lvert\frac{d}{dx}V^\pi(x)\right\rvert
-$$
-
-So, we can almost arbitrarily construct a piecewise continuous function of increasing and decreasing
-exponentials to satisfy this. For instance, let $$V(x)$$ denote the optimal correct value function,
-and $$W(x)$$ denotes another function as follows,
-
-<div>
-\begin{equation}
-W(x) =
-  \begin{cases}
-    0.3^x & x\leq\frac{1}{10}\\
-    2(0.3^{1-x}) + 0.21 & x\in(1/10, 3/10]\\
-    0.3^x + 0.37 & x\in(3/10, 1/2]\\
-    1.08(0.3^{1-x}) + 0.92& x>\frac{1}{2}\\
-  \end{cases}
-\end{equation}
-</div>
-
-This function was simply chosen by artbirarily placing exponential functions of the form
-$$\gamma^x$$ and $$\gamma^{1-x}$$ in such a way that the values at the endpoints were correct. Note
-that if $$W(x)$$ is thought to be the value function, the optimal policy will aim to guide the agent
-towards states $$x$$ where $$W(x)$$ is high. Below is a visual of two potential value functions,
-
-![](/assets/img/viscosity/viscosity-problem.png){: .center-image }
-
-It's fairly straightforward to see that the HJB equation is satisfied for both $$V$$ and $$W$$
-wherever they're continuous and differentiable. However, since $$W$$ is not continuous, it can
-get arbitrarily inaccurate in the interior of the state space. Clearly, given our knowledge of the
-MDP, $$V(x)$$ is objectively a better value function to learn than $$W(x)$$. However, by learning
-the value function using gradient descent, the two are indistinguishable if we search over
-continuous-almost-everywhere functions.
 
 # Viscosity Solutions to the Rescue
 
@@ -275,10 +223,8 @@ subsolution and a viscosity supersolution.
 ## The Value Function as the Unique Viscosity Solution
 
 We'll now show a beautiful property of viscosity solutions, that being that viscosity solutions
-$$H(x, V, DV) = 0$$ (and therefore viscosity solutions of the HJB equation) are unique. This
-thankfully solves the [massive issue discussed above](#it-gets-worse). We'll go
-over a proof from the seminal paper by Crandall and Lions. If you're not interested in reading the
-whole proof, you can check out the [discussion of its implications](#discussion) below.
+$$H(x, V, DV) = 0$$ (and therefore viscosity solutions of the HJB equation) are unique. We'll go
+over a proof from the seminal paper by Crandall and Lions.
 
 <div class="theorem">
   <b>Theorem (Uniqueness of Viscosity Solutions):</b>
@@ -605,6 +551,6 @@ f^\pm_i(x, \pi(x))&\triangleq\max(\pm f_i(x, \pi(x)), 0)\\
 In other words, when a state component moves in the positive direction the "right-derivative" is
 used to compute the corresponding element of the value function gradient, and when a state component
 moves in the negative direction the "left-derivative" is used. Now, the joint continuity constraint
-of the Hamiltonian reduces to asserting that for a fixed dynamics direction, the difference in
+of the Hamiltonian reduces to asserting that for a fixed state direction, the difference in
 Hamiltonians evaluated at two arbitrary states is arbitrarily small. This constraint would be
-satisfied by piecewise continuous value functions, for instance.
+satisfied by any piecewise continuous value function.

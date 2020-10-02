@@ -42,3 +42,12 @@ body {
   border: 1px solid rgba(0.2, 0.0, 0.2, 0.2);
   text-align: justify;
 }
+
+.idea {
+  display: block;
+  margin: 0.5em;
+  padding: 8px;
+  background-color: #ffffcc;
+  border: 1px solid rgba(0.0, 0.0, 0.0, 0.2);
+  text-align: justify;
+}
