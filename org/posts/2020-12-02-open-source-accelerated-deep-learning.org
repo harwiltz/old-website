@@ -412,3 +412,6 @@ The results were convincingly in the GPU's favor:
 #+BEGIN_EXPORT html
 <img src="/assets/img/amdgpu_benchmark.png"></img>
 #+END_EXPORT
+
+/By the way, the "feature image" for this post depicts [[https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwjBhrb6jLHtAhVCu1kKHRTZARYQFjACegQIAxAC&url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Di2lhwb_OckQ&usg=AOvVaw2UgoF2uFi6szUxMTZwUUAD][Linus Torvalds
+flipping off NVidia]]./
