@@ -6,14 +6,17 @@ permalink: /about/
 <link rel="stylesheet" href="/assets/css/me_photo_style.css">
 ![Me](/assets/img/me.jpg){: .center-image .me-image}
 {:style="clear: center"}
-I am a second year M.Sc. student at the [Mobile Robotics
-Lab](https://www.cim.mcgill.ca/~mrl) at McGill University in Montreal, Canada. I am
+I am a first year PhD student at the [Mobile Robotics
+Lab](https://www.cim.mcgill.ca/~mrl) at McGill University and [Mila](https://www.mila.quebec) in Montreal, Canada. I am
 fortunately supervised by [David Meger](https://www.cim.mcgill.ca/~dmeger) and [Marc G.
-Bellemare](http://www.marcgbellemare.info/). My
-research interests are primarily concerned with reinforcement learning, and
+Bellemare](http://www.marcgbellemare.info/).
+
+My research interests are primarily concerned with reinforcement learning, and
 particularly with methods of modeling uncertainty to improve safety and
-exploration. Lately I've been on a theory of continuous distributional reinforcement learning, with
-the goal of designing risk-sensitive RL algorithms for robotic applications.
+exploration. I am a [distributional reinforcement learning](https://www.distributional-rl.org) enthusiast.
+During my Master's, I derived a characterization of the distribution of returns
+induced by agents whose dynamics are driven by continuous-time Markov processes,
+which we used to analyze continuous time distributional RL algorithms. My thesis can be seen [here](/assets/thesis-msc.pdf).
 
 Previously, I was a Computer Engineering undergrad at McGill, and my studies
 were focused on signal processing, control, machine learning, and software
